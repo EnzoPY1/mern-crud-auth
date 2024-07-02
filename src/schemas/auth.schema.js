@@ -19,11 +19,17 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z
+  emailOrUsername: z
     .string({
-      required_error: "Email is required",
+      required_error: "Email or username is required",
     })
-    .email("Invalid email"),
+    .refine((value) => {
+      // Verificar si es un email válido o si es un username no vacío
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(value) || value.trim().length > 0;
+    }, {
+      message: "Invalid email or username",
+    }),
 
   password: z
     .string({
