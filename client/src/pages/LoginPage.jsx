@@ -16,7 +16,7 @@ function LoginPage() {
     if (isAuthenticated) {
       navigate("/tasks");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   const onSubmit = handleSubmit((data) => {
     signin({

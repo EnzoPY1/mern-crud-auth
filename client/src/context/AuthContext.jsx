@@ -1,5 +1,10 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { registerRequest, loginRequest, verifyTokenRequest } from "../api/auth";
+import {
+  registerRequest,
+  loginRequest,
+  verifyTokenRequest,
+  logoutRequest,
+} from "../api/auth";
 import Cookies from "js-cookie";
 
 export const AuthContext = createContext();
@@ -63,6 +68,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = async () => {
+    try {
+      await logoutRequest();
+      setUser(null);
+      setIsAuthenticated(false);
+      Cookies.remove("token");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   useEffect(() => {
     if (errors.length > 0) {
       const timer = setTimeout(() => {
@@ -78,22 +94,26 @@ export const AuthProvider = ({ children }) => {
       const cookies = Cookies.get();
       if (!cookies.token) {
         setIsAuthenticated(false);
+        setUser(null);
         setLoading(false);
-        return setUser(null);
+        return;
       }
+
       try {
         const res = await verifyTokenRequest(cookies.token);
-        if (!res.data) { 
-        setIsAuthenticated(false);
-        setLoading(false);
-        return;}
+        if (!res.data) {
+          setIsAuthenticated(false);
+          setUser(null);
+          setLoading(false);
+          return;
+        }
 
         setUser(res.data);
         setIsAuthenticated(true);
-        setLoading(false);
       } catch (error) {
         setIsAuthenticated(false);
         setUser(null);
+      } finally {
         setLoading(false);
       }
     }
@@ -105,6 +125,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         signup,
         signin,
+        logout,
         user,
         isAuthenticated,
         errors,
