@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { TaskProvider } from "./context/TasksContext";
 
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -13,6 +14,7 @@ import LogoutHandler from "./pages/LogoutHandler";
 function App() {
   return (
     <AuthProvider>
+      <TaskProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -28,6 +30,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </TaskProvider>
     </AuthProvider>
   );
 }
