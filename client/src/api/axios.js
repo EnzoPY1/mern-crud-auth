@@ -1,4 +1,3 @@
-// client/src/api/axios.js
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -14,7 +13,9 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   const token = Cookies.get('token');
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers['Authorization'] = `Bearer ${token}`;
+  } else {
+    console.warn('No token found in cookies');
   }
   return config;
 });

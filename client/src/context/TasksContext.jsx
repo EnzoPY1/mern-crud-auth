@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { createTaskRequest, getTasksRequest } from "../api/tasks";
-import axios from 'axios';
+import axiosInstance from '../api/axios';
+import Cookies from 'js-cookie';
 
 const TaskContext = createContext();
 
@@ -22,17 +23,21 @@ export function TaskProvider({ children }) {
       const res = await getTasksRequest();
       setTasks(res.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
   const createTask = async (task) => {
     try {
-      const response = await axios.post('http://localhost:3000/api/tasks', task);
+      const response = await axiosInstance.post('/tasks', task);
       console.log('Task created:', response.data);
     } catch (error) {
-      console.error('Error creating task:', error);
+      console.error('Error creating task:', error.response?.data || error.message);
     }
+  };
+
+  const clearTasks = () => {
+    setTasks([]);
   };
 
   return (
@@ -41,6 +46,7 @@ export function TaskProvider({ children }) {
         tasks,
         createTask,
         getTasks,
+        clearTasks,
       }}
     >
       {children}

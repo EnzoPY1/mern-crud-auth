@@ -10,26 +10,28 @@ import ProfilePage from "./pages/ProfilePage";
 import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./ProtectedRoute";
 import LogoutHandler from "./pages/LogoutHandler";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <AuthProvider>
       <TaskProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/logout" element={<LogoutHandler />} />
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/logout" element={<LogoutHandler />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route path="/tasks" element={<TasksPage />} />
-            <Route path="/add-task" element={<TasksFormPage />} />
-            <Route path="/tasks/:id" element={<TasksFormPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/add-task" element={<TasksFormPage />} />
+              <Route path="/tasks/:id" element={<TasksFormPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </TaskProvider>
     </AuthProvider>
   );

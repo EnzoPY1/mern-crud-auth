@@ -51,10 +51,13 @@ export const AuthProvider = ({ children }) => {
   const signin = async (user) => {
     try {
       const res = await loginRequest(user);
-      console.log(res.data);
       setUser(res.data);
       setIsAuthenticated(true);
-      setErrors([]); // Limpiar errores previos
+      if (res.data.token) {
+        Cookies.set('token', res.data.token);
+      } else {
+        console.error('No token received from server');
+      }
     } catch (error) {
       console.error(error);
       if (error.response && error.response.data) {
