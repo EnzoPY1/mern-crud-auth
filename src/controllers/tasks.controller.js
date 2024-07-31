@@ -11,18 +11,20 @@ export const getTasks = async (req, res) => {
 };
 
 export const createTask = async (req, res) => {
-  const { title, description, date } = req.body;
-
-  const newTask = new Task({ 
-    title, 
-    description, 
-    date, 
-    user: req.user.id
-  });
-  const savedTask = await newTask.save();
-  const populatedTask = await Task.findById(savedTask._id).populate('user', 'username email');
-
-  res.json(populatedTask);
+  try {
+    const { title, description, date } = req.body;
+    const newTask = new Task({ 
+      title, 
+      description, 
+      date, 
+      user: req.user.id // Asegúrate de que req.user esté definido
+    });
+    const savedTask = await newTask.save();
+    res.json(savedTask);
+  } catch (error) {
+    console.error('Error creating task:', error);
+    res.status(500).json({ message: "Error creating task", error: error.message });
+  }
 };
 
 export const getTask = async (req, res) => {
