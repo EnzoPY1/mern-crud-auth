@@ -1,7 +1,12 @@
 import { createContext, useContext, useState } from "react";
-import { createTaskRequest, getTasksRequest } from "../api/tasks";
-import axiosInstance from '../api/axios';
-import Cookies from 'js-cookie';
+import {
+  createTaskRequest,
+  getTasksRequest,
+  deleteTasksRequest,
+  getTaskRequest,
+} from "../api/tasks";
+import axiosInstance from "../api/axios";
+import Cookies from "js-cookie";
 
 const TaskContext = createContext();
 
@@ -29,15 +34,39 @@ export function TaskProvider({ children }) {
 
   const createTask = async (task) => {
     try {
-      const response = await axiosInstance.post('/tasks', task);
-      console.log('Task created:', response.data);
+      const response = await axiosInstance.post("/tasks", task);
+      console.log("Task created:", response.data);
     } catch (error) {
-      console.error('Error creating task:', error.response?.data || error.message);
+      console.error(
+        "Error creating task:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const deleteTask = async (id) => {
+    try {
+      const res = await deleteTasksRequest(id);
+      if (res.status === 204) setTasks(tasks.filter((task) => task._id !== id));
+    } catch (error) {
+      console.error(
+        "Error deleting task:",
+        error.response?.data || error.message
+      );
     }
   };
 
   const clearTasks = () => {
     setTasks([]);
+  };
+
+  const getTask = async (id) => {
+    try {
+      const res = await getTaskRequest(id);
+      return res.data;
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -47,6 +76,8 @@ export function TaskProvider({ children }) {
         createTask,
         getTasks,
         clearTasks,
+        deleteTask,
+        getTask,
       }}
     >
       {children}

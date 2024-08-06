@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data);
       setIsAuthenticated(true);
       if (res.data.token) {
-        Cookies.set('token', res.data.token);
+        Cookies.set('token', res.data.token, { expires: 1 });
       } else {
         console.error('No token received from server');
       }
@@ -94,13 +94,12 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     async function checkLogin() {
-      const cookies = Cookies.get();
-      if (!cookies.token) {
-        setIsAuthenticated(false);
-        setUser(null);
-        setLoading(false);
-        return;
-      }
+  const token = Cookies.get('token');
+  if (!token) {
+    setIsAuthenticated(false);
+    setLoading(false);
+    return;
+  }
 
       try {
         const res = await verifyTokenRequest(cookies.token);

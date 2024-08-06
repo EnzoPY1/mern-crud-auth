@@ -1,12 +1,13 @@
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+/*import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";*/
 import { useTasks } from "../context/TasksContext";
 import { useEffect } from "react";
+import TaskCard from "../components/TaskCard";
 
 function TasksPage() {
-  const { logout } = useAuth();
   const { getTasks, tasks, clearTasks  } = useTasks();
-  const navigate = useNavigate();
+  /*const { logout } = useAuth(); 
+  const navigate = useNavigate();*/
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -15,7 +16,7 @@ function TasksPage() {
     fetchTasks();
   }, []);
 
-  const handleLogout = async () => {
+  /*const handleLogout = async () => {
     try {
       await logout();
       clearTasks();
@@ -27,49 +28,19 @@ function TasksPage() {
 
   const handleTask = () => {
     navigate("/add-task");
-  };
+  };*/
 
   return (
-    <div>
-      <h1>TasksPage</h1>
+    <div className="grid grid-cols-3 gap-2">
       {Array.isArray(tasks) && tasks.length > 0 ? (
         tasks.map((task) => (
-          <div key={task._id}>
-            <h1>{task.title}</h1>
-            <p>{task.description}</p>
-          </div>
+          <TaskCard task={task} key={task._id}/>
         ))
       ) : (
         <p>No hay tareas disponibles</p>
       )}
 
-      <button
-        onClick={handleTask}
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#14B8A6",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Add Tasks
-      </button>
 
-      <button
-        onClick={handleLogout}
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#f44336",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Logout
-      </button>
     </div>
   );
 }

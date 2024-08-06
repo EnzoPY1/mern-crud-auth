@@ -1,20 +1,27 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTasks } from "../context/TasksContext";
+import { useEffect } from "react";
 
 function TasksFormPage() {
   const { register, handleSubmit } = useForm();
-  const { createTask } = useTasks();
+  const { createTask, getTask, updateTask } = useTasks();
   const navigate = useNavigate();
+  const params = useParams();
+
+  useEffect(() => {
+    if (params.id) {
+      getTask(params.id);
+    }
+  }, []);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
       const newTask = await createTask(data);
       console.log("New task created:", newTask);
-      navigate("/tasks"); // Redirect to tasks page after successful creation
+      navigate("/tasks");
     } catch (error) {
       console.error("Failed to create task:", error);
-      // Here you could set some state to show an error message to the user
     }
   });
 
@@ -35,7 +42,7 @@ function TasksFormPage() {
           className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
           {...register("description")}
         ></textarea>
-        
+
         <button className="rounded-md bg-teal-500 px-3 py-2 my-2">Save</button>
       </form>
     </div>

@@ -5,7 +5,7 @@ export const getTasks = async (req, res) => {
     user: req.user.id,
   }).populate({
     path: "user",
-    select: 'username email'
+    select: "username email",
   });
   res.json(tasks);
 };
@@ -13,27 +13,33 @@ export const getTasks = async (req, res) => {
 export const createTask = async (req, res) => {
   try {
     const { title, description, date } = req.body;
-    const newTask = new Task({ 
-      title, 
-      description, 
-      date, 
-      user: req.user.id // Asegúrate de que req.user esté definido
+    const newTask = new Task({
+      title,
+      description,
+      date,
+      user: req.user.id, // Asegúrate de que req.user esté definido
     });
     const savedTask = await newTask.save();
     res.json(savedTask);
   } catch (error) {
-    console.error('Error creating task:', error);
-    res.status(500).json({ message: "Error creating task", error: error.message });
+    console.error("Error creating task:", error);
+    res
+      .status(500)
+      .json({ message: "Error creating task", error: error.message });
   }
 };
 
 export const getTask = async (req, res) => {
-  const task = await Task.findById(req.params.id).populate({
-    path: "user",
-    select: 'username email'
-  });
-  if (!task) return res.status(404).json({ message: "Task not found" });
-  res.json(task);
+  try {
+    const task = await Task.findById(req.params.id).populate({
+      path: "user",
+      select: "username email",
+    });
+    if (!task) return res.status(404).json({ message: "Task not found" });
+    res.json(task);
+  } catch (error) {
+    res.status(404).json({ message: "Task not found" });
+  }
 };
 
 export const deleteTask = async (req, res) => {
@@ -44,7 +50,7 @@ export const deleteTask = async (req, res) => {
 
 export const updateTask = async (req, res) => {
   const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
-    new: true
+    new: true,
   });
   if (!task) return res.status(404).json({ message: "Task not found" });
   res.json(task);
