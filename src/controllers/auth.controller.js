@@ -50,18 +50,14 @@ export const login = async (req, res) => {
 
     const token = await createAccesToken({ id: user._id });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
+    res.cookie("token", token);
     res.json({
       id: user._id,
       username: user.username,
       email: user.email,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      token: token,
+      
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
