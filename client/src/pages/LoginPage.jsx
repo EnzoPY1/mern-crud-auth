@@ -34,7 +34,7 @@ function LoginPage() {
               {error}
             </div>
           ))}
-        <h1 className="text-2xl font-bold">Login</h1>
+        <h1 className="text-2xl font-bold my-2">Login</h1>
         <form onSubmit={onSubmit}>
           <input
             type="text"

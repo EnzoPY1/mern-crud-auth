@@ -4,6 +4,7 @@ import {
   getTasksRequest,
   deleteTasksRequest,
   getTaskRequest,
+  updateTasksRequest,
 } from "../api/tasks";
 import axiosInstance from "../api/axios";
 import Cookies from "js-cookie";
@@ -69,6 +70,14 @@ export function TaskProvider({ children }) {
     }
   };
 
+  const updateTask = async (id, task) => {
+    try {
+      await updateTasksRequest(id, task);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <TaskContext.Provider
       value={{
@@ -78,6 +87,7 @@ export function TaskProvider({ children }) {
         clearTasks,
         deleteTask,
         getTask,
+        updateTask,
       }}
     >
       {children}

@@ -23,12 +23,14 @@ function RegisterPage() {
   });
 
   return (
+    <div className="flex h-[calc(100vh-100px)] items-center justify-center">
     <div className="bg-zinc-800 max-w-md p-10 rounded-md">
       {registerErrors.map((error, i) => (
         <div key={i} className="bg-red-500 text-white p-2 my-2">
           {error}
         </div>
       ))}
+      <h1 className="text-2xl font-bold my-2">Register</h1>
       <form onSubmit={onSubmit}>
         <input
           type="text"
@@ -69,6 +71,7 @@ function RegisterPage() {
           Log in
         </Link>
       </p>
+    </div>
     </div>
   );
 }
